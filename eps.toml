@@ -1,0 +1,22 @@
+[package]
+name = "simple_todo"
+version = "0.1.0"
+description = "A minimal CLI todo list harness — storage, output, and hooks are all ports."
+authors = ["nick <nickagliano@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/your-org/simple_todo"
+platforms = []  # cross-platform Rust binary; no restriction needed
+
+[system-dependencies]
+# Rust toolchain required to build
+# brew = ["rust"]
+# apt  = ["cargo"]
+
+[eps]
+customization_guide = "CUSTOMIZE.md"
+hooks_dir = "hooks/"
+
+[service]
+enabled = true
+start   = "HOST=$(tailscale ip -4) ./serve.sh"
+port    = 8765
