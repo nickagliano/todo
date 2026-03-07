@@ -1290,7 +1290,7 @@ mod tests {
         let storage = Arc::new(Mutex::new(JsonStorage::default()));
         let reading = Arc::new(Mutex::new(JsonReadingList::default()));
         let house = Arc::new(Mutex::new(JsonStorage::new(home.path().join("house_projects.json"))));
-        build_router(storage, reading, house)
+        build_router(storage, reading, house, "#1a1a1a".to_string())
     }
 
     fn test_app_with_reading(home: &TempDir) -> (Router, SharedReadingList) {
@@ -1298,7 +1298,7 @@ mod tests {
         let storage = Arc::new(Mutex::new(JsonStorage::default()));
         let reading = Arc::new(Mutex::new(JsonReadingList::default()));
         let house = Arc::new(Mutex::new(JsonStorage::new(home.path().join("house_projects.json"))));
-        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house);
+        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house, "#1a1a1a".to_string());
         (app, reading)
     }
 
@@ -1385,7 +1385,7 @@ mod tests {
         }));
         let reading = Arc::new(Mutex::new(JsonReadingList::default()));
         let house = Arc::new(Mutex::new(JsonStorage::new(home.path().join("house_projects.json"))));
-        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house);
+        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house, "#1a1a1a".to_string());
 
         let r1 = app
             .clone()
@@ -1428,7 +1428,7 @@ mod tests {
         }));
         let reading = Arc::new(Mutex::new(JsonReadingList::default()));
         let house = Arc::new(Mutex::new(JsonStorage::new(home.path().join("house_projects.json"))));
-        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house);
+        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house, "#1a1a1a".to_string());
 
         app.clone()
             .oneshot(
@@ -1487,7 +1487,7 @@ mod tests {
         }));
         let reading = Arc::new(Mutex::new(JsonReadingList::default()));
         let house = Arc::new(Mutex::new(JsonStorage::new(home.path().join("house_projects.json"))));
-        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house);
+        let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house, "#1a1a1a".to_string());
 
         app.clone()
             .oneshot(
