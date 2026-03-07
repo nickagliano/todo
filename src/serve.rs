@@ -1333,7 +1333,7 @@ mod tests {
             "text/html; charset=utf-8"
         );
         let body = body_string(resp.into_body()).await;
-        assert!(body.contains("simple_todo"));
+        assert!(body.contains("todo"));
         assert!(body.contains("/tasks"));
         assert!(body.contains("Reading List"));
     }

@@ -9,7 +9,7 @@ use tempfile::TempDir;
 
 #[allow(deprecated)]
 fn cmd(home: &TempDir) -> Command {
-    let mut c = Command::cargo_bin("simple_todo").unwrap();
+    let mut c = Command::cargo_bin("todo").unwrap();
     c.env("HOME", home.path());
     c
 }
