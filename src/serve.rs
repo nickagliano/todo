@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 
 use anyhow::Result;
+use tower_http::trace::TraceLayer;
 use axum::{
     Json, Router,
     extract::{Path, State},
@@ -39,6 +40,8 @@ pub async fn run(port: u16) -> Result<()> {
 
     let app = build_router(storage, reading, house);
 
+    tracing_subscriber::fmt::init();
+
     let host = std::env::var("HOST").unwrap_or_else(|_| "127.0.0.1".into());
     let addr = format!("{host}:{port}");
     let listener = tokio::net::TcpListener::bind(&addr).await?;
@@ -61,7 +64,13 @@ pub fn build_router(storage: SharedStorage, reading: SharedReadingList, house: S
         .route("/house-projects", get(list_house).post(create_house))
         .route("/house-projects/reorder", put(reorder_house))
         .route("/house-projects/{id}", patch(update_house).delete(delete_house))
+        .route("/health", get(health))
+        .layer(TraceLayer::new_for_http())
         .with_state(state)
+}
+
+async fn health() -> Json<serde_json::Value> {
+    Json(serde_json::json!({"status": "ok"}))
 }
 
 // ── HTML helpers ──────────────────────────────────────────────────────────────
