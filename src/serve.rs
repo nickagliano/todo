@@ -27,6 +27,7 @@ struct AppState {
     storage: SharedStorage,
     reading: SharedReadingList,
     house: SharedHouseStorage,
+    app_color: String,
 }
 
 pub async fn run(port: u16) -> Result<()> {
@@ -38,7 +39,8 @@ pub async fn run(port: u16) -> Result<()> {
         .join("house_projects.json");
     let house = Arc::new(Mutex::new(JsonStorage::new(house_path)));
 
-    let app = build_router(storage, reading, house);
+    let app_color = std::env::var("APP_COLOR").unwrap_or_else(|_| "#1a1a1a".into());
+    let app = build_router(storage, reading, house, app_color);
 
     tracing_subscriber::fmt::init();
 
@@ -50,8 +52,8 @@ pub async fn run(port: u16) -> Result<()> {
     Ok(())
 }
 
-pub fn build_router(storage: SharedStorage, reading: SharedReadingList, house: SharedHouseStorage) -> Router {
-    let state = AppState { storage, reading, house };
+pub fn build_router(storage: SharedStorage, reading: SharedReadingList, house: SharedHouseStorage, app_color: String) -> Router {
+    let state = AppState { storage, reading, house, app_color };
     Router::new()
         .route("/", get(index))
         .route("/tasks", get(list_tasks).post(create_task))
@@ -83,7 +85,12 @@ fn html_response(body: impl Into<String>) -> impl IntoResponse {
 
 // ── GET / ─────────────────────────────────────────────────────────────────────
 
-async fn index() -> impl IntoResponse {
+async fn index(State(state): State<AppState>) -> impl IntoResponse {
+    let html = include_str!("todo.html").replace("__APP_COLOR__", &state.app_color);
+    html_response(html)
+}
+
+async fn _index_old() -> impl IntoResponse {
     let html = r#"<!doctype html>
 <html lang="en">
 <head>
@@ -859,7 +866,12 @@ async fn view_reading(
 
 // ── House Projects page ───────────────────────────────────────────────────────
 
-async fn house_index() -> impl IntoResponse {
+async fn house_index(State(state): State<AppState>) -> impl IntoResponse {
+    let html = include_str!("house.html").replace("__APP_COLOR__", &state.app_color);
+    html_response(html)
+}
+
+async fn _house_index_old() -> impl IntoResponse {
     let html = r#"<!doctype html>
 <html lang="en">
 <head>
