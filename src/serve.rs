@@ -1379,10 +1379,7 @@ mod tests {
     #[tokio::test]
     async fn create_assigns_sequential_ids() {
         let home = TempDir::new().unwrap();
-        let storage = Arc::new(Mutex::new({
-            std::env::set_var("HOME", home.path());
-            JsonStorage::default()
-        }));
+        let storage = Arc::new(Mutex::new(JsonStorage::new(home.path().join("tasks.json"))));
         let reading = Arc::new(Mutex::new(JsonReadingList::default()));
         let house = Arc::new(Mutex::new(JsonStorage::new(home.path().join("house_projects.json"))));
         let app = build_router(Arc::clone(&storage), Arc::clone(&reading), house, "#1a1a1a".to_string());
