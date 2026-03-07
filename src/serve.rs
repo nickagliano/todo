@@ -35,19 +35,24 @@ pub async fn run(port: u16) -> Result<()> {
     let reading = Arc::new(Mutex::new(JsonReadingList::default()));
     let house_path = dirs::config_dir()
         .unwrap_or_else(|| PathBuf::from("."))
-        .join("simple_todo")
+        .join("todo")
         .join("house_projects.json");
     let house = Arc::new(Mutex::new(JsonStorage::new(house_path)));
 
     let app_color = std::env::var("APP_COLOR").unwrap_or_else(|_| "#1a1a1a".into());
     let app = build_router(storage, reading, house, app_color);
 
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("todo=debug,tower_http=debug")),
+        )
+        .init();
 
     let host = std::env::var("HOST").unwrap_or_else(|_| "127.0.0.1".into());
     let addr = format!("{host}:{port}");
     let listener = tokio::net::TcpListener::bind(&addr).await?;
-    println!("simple_todo serving on {addr}");
+    println!("todo serving on {addr}");
     axum::serve(listener, app).await?;
     Ok(())
 }

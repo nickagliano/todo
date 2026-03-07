@@ -1,11 +1,11 @@
 [package]
-name = "simple_todo"
-version = "0.1.0"
+name = "todo"
+version = "0.1.3"
 description = "A minimal CLI todo list harness — storage, output, and hooks are all ports."
-authors = ["nick <nickagliano@gmail.com>"]
+authors = ["nickagliano"]
 license = "MIT"
-repository = "https://github.com/your-org/simple_todo"
-platforms = []  # cross-platform Rust binary; no restriction needed
+repository = "https://github.com/nickagliano/todo"
+platform = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu"]
 
 [system-dependencies]
 # Rust toolchain required to build
