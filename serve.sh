@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# simple_todo/serve.sh — EPC service entry point
+# todo/serve.sh — EPC service entry point
 #
-# EPC calls this script to start simple_todo as a persistent HTTP service.
+# EPC calls this script to start todo as a persistent HTTP service.
 # The server binds to the port declared in eps.toml [service].port.
 #
 # To test manually:
@@ -13,4 +13,4 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 cargo build --release --quiet
-exec ./target/release/simple_todo serve --port "${PORT:-8765}"
+exec ./target/release/todo serve --port "${PORT:-8765}"
