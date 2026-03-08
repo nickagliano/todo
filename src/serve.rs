@@ -101,7 +101,7 @@ async fn _index_old() -> impl IntoResponse {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>simple_todo</title>
+  <title>todo</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -216,7 +216,7 @@ async fn _index_old() -> impl IntoResponse {
 </head>
 <body>
   <main>
-    <h1>simple_todo</h1>
+    <h1>todo</h1>
 
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('tasks', this)">Tasks</button>
@@ -957,7 +957,7 @@ async fn _house_index_old() -> impl IntoResponse {
 </head>
 <body>
   <main>
-    <h1>simple_todo</h1>
+    <h1>todo</h1>
     <div class="tabs">
       <a href="/" class="tab-btn">Tasks</a>
       <a href="/?tab=reading" class="tab-btn">Reading List</a>

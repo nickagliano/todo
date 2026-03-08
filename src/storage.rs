@@ -36,7 +36,7 @@ impl Default for JsonStorage {
     fn default() -> Self {
         let path = dirs::config_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("simple_todo")
+            .join("todo")
             .join("tasks.json");
         Self { path }
     }

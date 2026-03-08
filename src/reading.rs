@@ -34,7 +34,7 @@ impl Default for JsonReadingList {
     fn default() -> Self {
         let path = dirs::config_dir()
             .unwrap_or_else(|| PathBuf::from("."))
-            .join("simple_todo")
+            .join("todo")
             .join("reading.json");
         Self { path }
     }
@@ -105,7 +105,7 @@ mod tests {
     #[test]
     fn default_resolves_to_config_dir() {
         let rl = JsonReadingList::default();
-        assert!(rl.path.to_string_lossy().contains("simple_todo"));
+        assert!(rl.path.to_string_lossy().contains("todo"));
         assert!(rl.path.to_string_lossy().ends_with("reading.json"));
     }
 
