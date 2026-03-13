@@ -153,6 +153,9 @@
   </style>
 </head>
 <body>
+<label id="haptic-trigger" for="haptic-input" style="position:fixed;opacity:0;pointer-events:none;z-index:-1">
+  <input type="checkbox" switch="" id="haptic-input" style="all:initial;appearance:auto">
+</label>
   <main>
     <h1>todo</h1>
 
@@ -199,6 +202,10 @@
       switchTab('reading', readingBtn);
     }
 
+    const hapticTrigger = document.getElementById('haptic-trigger');
+    function haptic() { hapticTrigger.click(); }
+    function hapticSuccess() { hapticTrigger.click(); setTimeout(() => hapticTrigger.click(), 80); }
+
     // ── Tasks ──────────────────────────────────────────────────────────────────
     const list  = document.getElementById('list');
     const empty = document.getElementById('empty');
@@ -234,6 +241,7 @@
             headers: {'content-type': 'application/json'},
             body: JSON.stringify({ done: cb.checked }),
           });
+          cb.checked ? hapticSuccess() : haptic();
           loadTasks();
         };
 
@@ -259,6 +267,7 @@
         headers: {'content-type': 'application/json'},
         body: JSON.stringify({ text }),
       });
+      haptic();
       input.value = '';
       loadTasks();
     };
@@ -337,6 +346,7 @@
         headers: {'content-type': 'application/json'},
         body: JSON.stringify({ url }),
       });
+      haptic();
       urlInput.value = '';
       loadReading();
     };
