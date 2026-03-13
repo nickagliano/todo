@@ -1,4 +1,4 @@
-# simple_todo — Customization Guide
+# todo — Customization Guide
 
 This is an [Extremely Personal Software (EPS)](https://epm.sh) harness. It is
 **functional by default but deliberately incomplete** — the three ports below are
@@ -7,8 +7,8 @@ where you make it yours.
 ## Getting Started
 
 ```sh
-git clone <your-repo-url>
-cd simple_todo
+git clone https://github.com/nickagliano/todo
+cd todo
 ./run.sh add "My first task"
 ./run.sh list
 ./run.sh done 1
@@ -21,7 +21,7 @@ cd simple_todo
 **What it does:** Controls where tasks are persisted.
 
 **Default:** `JsonStorage` — writes a JSON array to
-`~/.config/simple_todo/tasks.json`. Readable, but not great for concurrent
+`~/.config/todo/tasks.json`. Readable, but not great for concurrent
 access, large lists, or syncing.
 
 **How to customize:** Implement the `Storage` trait and swap it in `main.rs`:
@@ -44,7 +44,7 @@ Wire it up in `main.rs`:
 // Before:
 let storage = JsonStorage::default();
 // After:
-let storage = SqliteStorage::new("~/.config/simple_todo/tasks.db")?;
+let storage = SqliteStorage::new("~/.config/todo/tasks.db")?;
 ```
 
 ---
@@ -108,7 +108,7 @@ Example uses:
 Example `hooks/on_complete.sh`:
 ```sh
 #!/usr/bin/env bash
-osascript -e "display notification \"Done: $2\" with title \"simple_todo\""
+osascript -e "display notification \"Done: $2\" with title \"todo\""
 ```
 
 ---
@@ -120,7 +120,7 @@ osascript -e "display notification \"Done: $2\" with title \"simple_todo\""
 **What it does:** Controls where reading list items are stored.
 
 **Default:** `JsonReadingList` — writes a JSON array to
-`~/.config/simple_todo/reading.json`.
+`~/.config/todo/reading.json`.
 
 **How to customize:** Implement the `ReadingList` trait and swap it in `serve.rs`:
 

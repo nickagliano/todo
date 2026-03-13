@@ -28,6 +28,35 @@ struct AppState {
     reading: SharedReadingList,
     house: SharedHouseStorage,
     app_color: String,
+    icon_png: Arc<Vec<u8>>,
+}
+
+fn generate_icon_png(hex: &str) -> Vec<u8> {
+    let hex = hex.trim_start_matches('#');
+    let r = u8::from_str_radix(hex.get(0..2).unwrap_or("64"), 16).unwrap_or(100);
+    let g = u8::from_str_radix(hex.get(2..4).unwrap_or("64"), 16).unwrap_or(100);
+    let b = u8::from_str_radix(hex.get(4..6).unwrap_or("64"), 16).unwrap_or(100);
+    let img = image::RgbImage::from_fn(180, 180, |_, _| image::Rgb([r, g, b]));
+    let mut buf = Vec::new();
+    img.write_to(&mut std::io::Cursor::new(&mut buf), image::ImageFormat::Png).unwrap_or(());
+    buf
+}
+
+async fn serve_icon(State(s): State<AppState>) -> impl IntoResponse {
+    ([(header::CONTENT_TYPE, "image/png")], (*s.icon_png).clone())
+}
+
+async fn serve_manifest(State(s): State<AppState>) -> impl IntoResponse {
+    let body = serde_json::json!({
+        "name": "Todo",
+        "short_name": "Todo",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": s.app_color,
+        "theme_color": s.app_color,
+        "icons": [{"src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"}]
+    }).to_string();
+    ([(header::CONTENT_TYPE, "application/json")], body)
 }
 
 pub async fn run(port: u16) -> Result<()> {
@@ -58,9 +87,12 @@ pub async fn run(port: u16) -> Result<()> {
 }
 
 pub fn build_router(storage: SharedStorage, reading: SharedReadingList, house: SharedHouseStorage, app_color: String) -> Router {
-    let state = AppState { storage, reading, house, app_color };
+    let icon_png = Arc::new(generate_icon_png(&app_color));
+    let state = AppState { storage, reading, house, app_color, icon_png };
     Router::new()
         .route("/", get(index))
+        .route("/manifest.json", get(serve_manifest))
+        .route("/apple-touch-icon.png", get(serve_icon))
         .route("/tasks", get(list_tasks).post(create_task))
         .route("/tasks/reorder", put(reorder_tasks))
         .route("/tasks/{id}", patch(update_task).delete(delete_task))
